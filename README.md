@@ -22,10 +22,23 @@ Commercial generative and discriminative AI workloads demand strict isolation be
 The deployment architecture abstracts compute resources away from long-term storage boundaries by structuring the machine learning lifecycle into independent, isolated Kubernetes workloads.
 
 ```text
+.
 ├── k8s/
-│   ├── pvc.yaml              # Dynamic Persistent Volume Claim manifest (10Gi Standard Disk)
-│   ├── train-job.yaml        # Batch Job manifest for isolated CNN weight extraction
-│   └── serve-deploy.yaml     # Stateless Deployment and LoadBalancer Service manifests
+│   ├── pvc.yaml
+│   ├── serve-deploy.yaml
+│   └── train-job.yaml
+├── src/
+│   ├── inference/
+│   │   ├── app.py
+│   │   ├── Dockerfile
+│   │   ├── requirements.txt
+│   │   └── templates/
+│   │       └── index.html
+│   └── training/
+│       ├── main.py
+│       ├── Dockerfile
+│       └── requirements.txt
+└── README.md
 ```
 
 ### Core Cluster Blueprint
