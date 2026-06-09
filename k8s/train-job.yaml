@@ -1,0 +1,19 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: mnist-training-job
+spec:
+  template:
+    spec:
+      containers:
+      - name: training
+        image: us-central1-docker.pkg.dev/nyu-proj-1-483021/ml-k8s-repo/mnist-train:v2
+        volumeMounts:
+        - name: model-storage
+          mountPath: /mnt/model
+      restartPolicy: Never
+      volumes:
+      - name: model-storage
+        persistentVolumeClaim:
+          claimName: model-pvc
+  backoffLimit: 1

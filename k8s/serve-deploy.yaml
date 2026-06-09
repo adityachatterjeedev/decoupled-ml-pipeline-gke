@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mnist-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mnist-infer
+  template:
+    metadata:
+      labels:
+        app: mnist-infer
+    spec:
+      containers:
+      - name: infer-container
+        image: us-central1-docker.pkg.dev/nyu-proj-1-483021/ml-k8s-repo/mnist-infer:v3
+        ports:
+        - containerPort: 5000
+        resources:
+          requests:
+            memory: "1Gi"
+            cpu: "500m"
+          limits:
+            memory: "2Gi"
+            cpu: "1000m"
+        volumeMounts:
+        - name: model-storage
+          mountPath: /mnt/model
+          readOnly: true
+      volumes:
+      - name: model-storage
+        persistentVolumeClaim:
+          claimName: model-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mnist-loadbalancer
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 5000
+  selector:
+    app: mnist-infer
